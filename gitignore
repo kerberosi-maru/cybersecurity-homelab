@@ -1,0 +1,46 @@
+# Virtual machine / snapshot files
+*.vmdk
+*.vdi
+*.vbox
+*.ova
+*.ovf
+*.qcow2
+snapshots/
+
+# Large binary files & malware samples (never commit real samples)
+*.exe
+*.dll
+*.zip
+*.tar.gz
+*.pcap
+*.pcapng
+samples/
+malware/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+
+# pfSense / config exports (if sensitive)
+*.xml
+config-backups/
