@@ -2,14 +2,11 @@
 
 **Personal Portfolio Project | Malware Analysis • Network Defense • SOC Skills**
 
-[![pfSense](https://img.shields.io/badge/pfSense-Firewall-blue?logo=pfsense)](https://www.pfsense.org/)
-[![REMnux](https://img.shields.io/badge/REMnux-Malware%20Analysis-red)](https://remnux.org/)
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-Jumpbox-purple?logo=ubuntu)](https://ubuntu.com/)
-[![Windows](https://img.shields.io/badge/Windows-Victim%20VM-blue?logo=windows)](https://www.microsoft.com/windows/)
-
-**Version:** June 28, 2026  
-**Status:** Active | Continuously Improved  
+**Version:** July 25, 2026  
+**Status:** Active & Fully Restored  
 **Maintained by:** Bennett Love — U.S. Army Combat Veteran
+
+[![GitHub](https://img.shields.io/badge/GitHub-kerberosi--maru%2Fcybersecurity--homelab-blue?logo=github)](https://github.com/kerberosi-maru/cybersecurity-homelab)
 
 ---
 
@@ -18,30 +15,52 @@
 This repository documents my hands-on **cybersecurity homelab** built for practical skill development, certification preparation (SecurityX/CASP+, CBROPS, CCNA, CEH), and portfolio building as I transition into cybersecurity and IT roles.
 
 **Current Focus Areas:**
-- Segmented network design with pfSense
-- Isolated malware analysis environment (hybrid virtual + physical)
-- Static and dynamic malware analysis workflows
-- Documentation and repeatable processes
 
-The lab emphasizes **safety, repeatability, and clear documentation** — principles carried over from my military background in radar, electronic warfare, and targeting.
+- Strong network segmentation and isolation with pfSense
+- Isolated malware analysis sandbox (Internal Network design)
+- Static and dynamic malware analysis workflows (REMnux + Windows Victim)
+- Reliable management via dedicated physical Jumpbox
+- Robust backup and recovery strategy
+- Clear, repeatable documentation and processes
+
+The lab emphasizes **safety, isolation, repeatability, and clear documentation** — principles carried over from my military background in radar, electronic warfare, and targeting.
 
 ---
 
-## 🏗️ Current Architecture (June 2026)
+## 🏗️ Current Architecture (July 2026)
 
-The lab currently uses a **hybrid virtual + physical** setup:
+The lab uses a **hybrid virtual + physical** design with strong isolation:
 
-- **LANHOME** (192.168.10.0/24): Management network
-- **SANDBOX** (192.168.60.0/24): Isolated analysis network (bridged to physical LAN adapter)
-- **REMnux**: Now running as a physical machine connected via physical switch
-- **Windows Victim VM**: Bridged to the same physical adapter as pfSense’s SANDBOX interface
-- **pfSense**: Handles firewalling and routing between networks
+| Network   | Subnet            | Purpose                          | Key Hosts / Notes                                      |
+|-----------|-------------------|----------------------------------|--------------------------------------------------------|
+| **LANHOME** | 192.168.10.0/24 | Management & Jumpbox network    | pfSense `.1`, Windows Host `.100`, Jumpbox `.50`      |
+| **SANDBOX** | 192.168.60.0/24 | Isolated malware analysis       | Internal Network named `sandbox` (DHCP disabled)      |
 
-This setup allows the Victim VM to communicate safely with both pfSense and the physical REMnux while remaining protected by firewall rules.
+**Core Components:**
 
-**Full detailed architecture, workflows, and configuration** are documented in the Operations Manual:
+- **pfSense** (VirtualBox VM)  
+  - WAN: Bridged to host wireless  
+  - LANHOME: Bridged to Realtek PCIe GbE  
+  - SANDBOX: Internal Network `sandbox`
 
-→ **[Homelab Operations Manual (v1.2)](docs/Homelab-Operations-Manual.md)**
+- **Jumpbox** — Physical HP Pavilion dm4 running Ubuntu 22.04.5 LTS  
+  Primary clean management station (accessed via WSL + mosh)
+
+- **REMnux** (192.168.60.100) — Physical analysis machine  
+  Default user: `remnux`
+
+- **Windows Victim VM** (192.168.60.101) — Detonation target  
+  Reverted to clean snapshot after every run
+
+**Firewall Policy Highlights (SANDBOX interface):**
+- Allow all intra-SANDBOX traffic
+- Allow LANHOME → SANDBOX (management only)
+- Allow SANDBOX → pfSense self
+- **Block** SANDBOX → LANHOME (strong isolation)
+
+Full details, diagrams, daily checklists, aliases, and safety rules are in the Operations Manual.
+
+→ **[Homelab Operations Manual (v1.3)](docs/Homelab-Operations-Manual.md)**
 
 ---
 
@@ -51,35 +70,52 @@ This setup allows the Victim VM to communicate safely with both pfSense and the 
 cybersecurity-homelab/
 ├── README.md
 ├── docs/
-│   └── Homelab-Operations-Manual.md     ← Main detailed manual (recommended starting point)
+│   └── Homelab-Operations-Manual.md   ← Primary documentation
 ├── scripts/
 │   ├── aliases.sh
 │   └── sandbox-status.sh
-├── images/          (screenshots & diagrams)
+├── images/                            ← Architecture diagrams & screenshots
 └── .gitignore
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started / Daily Workflow
 
-See the **[Operations Manual](docs/Homelab-Operations-Manual.md)** for:
-- Current network architecture and diagrams
-- Daily startup checklist
-- File transfer workflow
-- Static & dynamic analysis procedures
-- Windows Victim VM configuration
-- Safety rules
+1. Start the **pfSense** VM
+2. Power on the physical **Jumpbox**
+3. From Windows host WSL → `jump` (mosh to Jumpbox)
+4. Run `sandbox-status` to verify connectivity
+5. Start file server (`fileserver`) if needed
+6. Power on **Windows Victim VM** and **revert to clean snapshot**
+7. Begin analysis (always keep samples zipped until ready)
+
+See the Operations Manual for complete procedures, WSL route scripts, aliases, and safety rules.
 
 ---
 
-## 🔄 Recent Updates (June 28, 2026)
+## 🔄 Recent Updates (July 25, 2026 — v1.3)
 
-- Updated to hybrid virtual + physical architecture
-- REMnux moved to physical machine
-- Added detailed Windows Victim VM configuration section
-- Updated baseline snapshot strategy
-- Improved documentation formatting
+- **Post-Windows-reset full restoration** completed
+- Network architecture locked to **Internal Network `"sandbox"`** for true isolation (major improvement over previous bridged design)
+- WSL mirrored networking + permanent route script for reliable Jumpbox/REMnux/Victim access
+- Jumpbox aliases restored and corrected (`remnux`, `sandbox-status`, `sandbox-capture`, `fileserver`)
+- **Hasleo Backup Suite Free** system imaging + AES-256 encrypted baseline image + Rescue USB
+- **Kopia** reconnected to existing repository; VM + Desktop snapshots running again
+- Network drives remapped by IP for ProtonVPN stability
+- Living status tracking + project continuity process established
+
+**Previous major update (June 28, 2026 — v1.2):** Hybrid architecture, physical REMnux, improved Victim configuration and snapshot strategy.
+
+---
+
+## 🛡️ Safety First
+
+- Never execute malware on the main Windows host
+- Always revert the Victim VM to a clean snapshot after every detonation
+- Keep samples compressed until analysis begins
+- Regularly verify isolation with `sandbox-status`
+- Take a new Hasleo system image after any major host change
 
 ---
 
@@ -89,3 +125,7 @@ This project is licensed under the MIT License.
 
 **Maintained by:** Bennett Love  
 **GitHub:** https://github.com/kerberosi-maru/cybersecurity-homelab
+
+---
+
+*This lab is a living portfolio project. Documentation is updated as the environment evolves.*
