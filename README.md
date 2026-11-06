@@ -2,7 +2,7 @@
 
 **Personal Portfolio Project | Malware Analysis • Network Defense • SOC Skills**
 
-**Version:** July 25, 2026  
+**Version:** November 2026  
 **Status:** Active & Fully Restored  
 **Maintained by:** Bennett Love — U.S. Army Combat Veteran
 
@@ -19,6 +19,7 @@ This repository documents my hands-on **cybersecurity homelab** built for practi
 - Strong network segmentation and isolation with pfSense
 - Isolated malware analysis sandbox (Internal Network design)
 - Static and dynamic malware analysis workflows (REMnux + Windows Victim)
+- Vulnerability scanning with OpenVAS / Greenbone (Metasploitable lab)
 - Reliable management via dedicated physical Jumpbox
 - Robust backup and recovery strategy
 - Clear, repeatable documentation and processes
@@ -52,6 +53,9 @@ The lab uses a **hybrid virtual + physical** design with strong isolation:
 - **Windows Victim VM** (192.168.60.101) — Detonation target  
   Reverted to clean snapshot after every run
 
+- **Metasploitable** (192.168.60.102) — Vulnerable target for scanning labs  
+- **Greenbone / OpenVAS** — Scanner used for vulnerability assessments inside the SANDBOX
+
 **Firewall Policy Highlights (SANDBOX interface):**
 - Allow all intra-SANDBOX traffic
 - Allow LANHOME → SANDBOX (management only)
@@ -70,7 +74,8 @@ Full details, diagrams, daily checklists, aliases, and safety rules are in the O
 cybersecurity-homelab/
 ├── README.md
 ├── docs/
-│   └── Homelab-Operations-Manual.md   ← Primary documentation
+│   ├── Homelab-Operations-Manual.md          ← Primary documentation
+│   └── OpenVAS-Metasploitable-Scan.md        ← Vulnerability scanning lab
 ├── scripts/
 │   ├── aliases.sh
 │   └── sandbox-status.sh
@@ -94,7 +99,14 @@ See the Operations Manual for complete procedures, WSL route scripts, aliases, a
 
 ---
 
-## 🔄 Recent Updates (July 25, 2026 — v1.3)
+## 🔄 Recent Updates (November 2026)
+
+- Added **OpenVAS / Greenbone vulnerability scanning lab** against Metasploitable
+- Documented safe scanning workflow inside the isolated SANDBOX
+- Demonstrated management access to scanner UI from LANHOME without breaking isolation
+- Lab write-up: [OpenVAS Metasploitable Scan](docs/OpenVAS-Metasploitable-Scan.md)
+
+## 🔄 Previous Updates (July 25, 2026 — v1.3)
 
 - **Post-Windows-reset full restoration** completed
 - Network architecture locked to **Internal Network `"sandbox"`** for true isolation (major improvement over previous bridged design)
