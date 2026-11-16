@@ -64,7 +64,7 @@ The lab uses a **hybrid virtual + physical** design with strong isolation:
 
 Full details, diagrams, daily checklists, aliases, and safety rules are in the Operations Manual.
 
-→ **[Homelab Operations Manual (v1.3)](docs/Homelab-Operations-Manual.md)**
+→ **[Homelab Operations Manual (v2.0, Nov 2026)](docs/Homelab-Operations-Manual.md)**
 
 ---
 
